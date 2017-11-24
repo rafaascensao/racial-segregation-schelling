@@ -1,6 +1,7 @@
 import numpy as np
 from random import randint
 
+
 class Matrix:
     def __init__(self, dim = 10, p_one = 0.4, p_two = 0.4, threshold = 0.3):
 
@@ -37,7 +38,8 @@ class Matrix:
         unsatisfied = []
         for x in range(self.dim - 1):
             for y in range(self.dim - 1):
-                if self.matrix[x][y] != 0 and self.check_position(x, y): unsatisfied.append((x,y))
+                if self.matrix[x][y] != 0 and self.check_position(x, y):
+                    unsatisfied.append((x, y))
 
 
     def check_position(self, x, y):
@@ -78,4 +80,33 @@ class Matrix:
             same = 0
             diff = 0
 
-    def check_neighborhood(self, neighborhood, pos):
+    # number of different races not being used
+    def check_neighborhood(self, neighborhood, pos) -> bool:
+        my_race = self.matrix[pos[0]][pos[1]]
+        same_race = 0
+        diff_race = 0
+        num_neighbors = 0
+
+        if len(neighborhood) == 0:
+            return True
+
+        for neighbor in neighborhood:
+            if self.matrix[neighbor[0]][neighbor[1]] == 0:
+                continue
+            elif self.matrix[neighbor[0]][neighbor[1]] == my_race:
+                same_race += 1
+                num_neighbors += 1
+            else:
+                diff_race += 1
+                num_neighbors += 1
+
+        ratio = same_race / num_neighbors
+
+        return ratio > self.threshold
+
+    def move_unsatisfied(self, unsat):
+        for u in unsat:
+            x = randint(0, self.dim - 1)
+            y = randint(0, self.dim - 1)
+            if self.matrix[x][y] == 0:
+                self.matrix[x][y] = u[0][1]
