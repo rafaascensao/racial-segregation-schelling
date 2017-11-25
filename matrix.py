@@ -45,42 +45,21 @@ class Matrix:
 
     def check_position(self, x, y):
         neighbors = []
+        neighbors.append((x, y - 1))
+        neighbors.append((x, y + 1))
+        neighbors.append((x - 1, y))
+        neighbors.append((x + 1, y))
+        neighbors.append((x - 1, y - 1))
+        neighbors.append((x - 1, y + 1))
+        neighbors.append((x + 1, y - 1))
+        neighbors.append((x + 1, y + 1))
         position = (x, y)
-        if x == 0 and y == 0:
-            # top left
-            neighbors.append((x +1, y), (x, y+1), (x+1, y+1))
+        for t in neighbors:
+            if t[0] < 0 or t[0] > self.dim-1:
+                neighbors.remove(t)
+            elif t[1] < 0 or t[1] > self.dim-1:
+                neighbors.remove(t)
 
-        elif x == 0 and y == self.dim - 1:
-            #top right
-            neighbors.append((x+1,y), (x, y-1), (x+1,y-1))
-
-        elif x == self.dim - 1 and y == 0:
-            # bottom left
-            neighbors.append((x-1,y), (x, y + 1), (x-1, y+1))
-
-        elif x == self.dim - 1 and y == self.dim -1:
-            # bottom right
-            neighbors.append((x-1,y),(x,y-1),(x-1,y-1))
-
-        elif x == 0:
-            # ceiling
-            neighbors.append((x+1,y),(x+1,y-1),(x+1,y+1), (x,y-1), (x,y+1))
-
-        elif y == 0:
-            # left wall
-            neighbors.append((x+1,y), (x-1,y), (x, y+1), (x-1, y+1), (x+1, y+1))
-
-        elif x == self.dim - 1:
-            # floor
-            neighbors.append((x - 1, y), (x - 1, y - 1), (x - 1, y + 1), (x, y - 1), (x, y + 1))
-
-        elif y == self.dim - 1:
-            # right wall
-            neighbors.append((x + 1, y), (x - 1, y), (x, y - 1), (x - 1, y - 1), (x + 1, y - 1))
-
-        else:
-            # regular case
-            neighbors.append((x, y-1), (x, y+1), (x-1, y), (x+1, y), (x-1, y-1),(x-1, y+1), (x+1, y-1), (x+1, y+1))
         return self.check_neighborhood(neighbors, position)
 
     # number of different races not being used
@@ -125,3 +104,41 @@ class Matrix:
                 if self.matrix[i][j] == 0:
                     empty.append((i, j))
         return empty
+
+'''      
+        if x == 0 and y == 0:
+            # top left
+            neighbors.append((x +1, y), (x, y+1), (x+1, y+1))
+
+        elif x == 0 and y == self.dim - 1:
+            #top right
+            neighbors.append((x+1,y), (x, y-1), (x+1,y-1))
+
+        elif x == self.dim - 1 and y == 0:
+            # bottom left
+            neighbors.append((x-1,y), (x, y + 1), (x-1, y+1))
+
+        elif x == self.dim - 1 and y == self.dim -1:
+            # bottom right
+            neighbors.append((x-1,y),(x,y-1),(x-1,y-1))
+
+        elif x == 0:
+            # ceiling
+            neighbors.append((x+1,y),(x+1,y-1),(x+1,y+1), (x,y-1), (x,y+1))
+
+        elif y == 0:
+            # left wall
+            neighbors.append((x+1,y), (x-1,y), (x, y+1), (x-1, y+1), (x+1, y+1))
+
+        elif x == self.dim - 1:
+            # floor
+            neighbors.append((x - 1, y), (x - 1, y - 1), (x - 1, y + 1), (x, y - 1), (x, y + 1))
+
+        elif y == self.dim - 1:
+            # right wall
+            neighbors.append((x + 1, y), (x - 1, y), (x, y - 1), (x - 1, y - 1), (x + 1, y - 1))
+
+        else:
+            # regular case
+            neighbors.append((x, y-1), (x, y+1), (x-1, y), (x+1, y), (x-1, y-1),(x-1, y+1), (x+1, y-1), (x+1, y+1))
+        '''
