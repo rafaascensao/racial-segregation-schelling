@@ -3,7 +3,7 @@ from random import randint, choice
 
 
 class Matrix:
-    def __init__(self, dim = 10, p_one = 0.2, p_two = 0.2, threshold = 0.1):
+    def __init__(self, dim = 10, p_one = 0.4, p_two = 0.4, threshold = 0.5):
 
         self.dim = dim
         self.entries = dim * dim
@@ -34,16 +34,21 @@ class Matrix:
                 self.matrix[x][y] = 2
                 i += 1
 
-    def assert_insatisfied(self):
+    def assert_unsatisfied(self):
         unsatisfied = []
-        for x in range(self.dim - 1):
-            for y in range(self.dim - 1):
-                if self.matrix[x][y] != 0 and self.check_position(x, y):
-                    unsatisfied.append((x, y))
+        for x in range(self.dim):
+            for y in range(self.dim):
+                print("X: ",x)
+                print("Y: ",y)
+                if self.matrix[x][y] != 0:
+                    if self.check_position(x, y):
+                        unsatisfied.append((x, y))
+        print("Unsastisfied: ", unsatisfied)
         return unsatisfied
 
     def check_position(self, x, y):
         neighbors = list()
+        to_remove = list()
         neighbors.append((x, y - 1))
         neighbors.append((x, y + 1))
         neighbors.append((x - 1, y))
@@ -55,20 +60,21 @@ class Matrix:
         position = (x, y)
         for t in neighbors:
             if t[0] < 0 or t[0] > self.dim-1:
-                neighbors.remove(t)
+                to_remove.append(t)
             elif t[1] < 0 or t[1] > self.dim-1:
-                neighbors.remove(t)
+                to_remove.append(t)
+
+        for r in to_remove:
+            neighbors.remove(r)
 
         return self.check_neighborhood(neighbors, position)
 
     # number of different races not being used
     def check_neighborhood(self, neighborhood, pos) -> bool:
         my_race = self.matrix[pos[0]][pos[1]]
+        print("NEIGHBORHOOD: ", neighborhood)
         same_race = 0
         num_neighbors = 0
-
-        if len(neighborhood) == 0:
-            return True
 
         for neighbor in neighborhood:
             if self.matrix[neighbor[0]][neighbor[1]] == 0:
@@ -81,8 +87,8 @@ class Matrix:
         except ZeroDivisionError:
             return True
 
-        print(ratio)
-        return ratio > self.threshold
+        print("Ratio :", ratio)
+        return ratio < self.threshold
 
     def move_unsatisfied(self, unsat):
 
