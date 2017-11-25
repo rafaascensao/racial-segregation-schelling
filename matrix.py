@@ -3,7 +3,7 @@ from random import randint, choice
 
 
 class Matrix:
-    def __init__(self, dim = 10, p_one = 0.4, p_two = 0.4, threshold = 0.3):
+    def __init__(self, dim = 10, p_one = 0.2, p_two = 0.2, threshold = 0.1):
 
         self.dim = dim
         self.entries = dim * dim
@@ -82,7 +82,10 @@ class Matrix:
                 diff_race += 1
                 num_neighbors += 1
 
-        ratio = same_race / num_neighbors
+        try:
+            ratio = same_race / num_neighbors
+        except ZeroDivisionError:
+            return True
 
         return ratio > self.threshold
 
