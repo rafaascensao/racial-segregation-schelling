@@ -2,8 +2,10 @@ import numpy as np
 from random import randint, choice
 
 
+
+
 class Matrix:
-    def __init__(self, dim = 10, p_one = 0.4, p_two = 0.4, threshold = 0.5):
+    def __init__(self, dim = 150, p_one = 0.44, p_two = 0.44, threshold = 0.7):
 
         self.dim = dim
         self.entries = dim * dim
@@ -38,12 +40,10 @@ class Matrix:
         unsatisfied = []
         for x in range(self.dim):
             for y in range(self.dim):
-                print("X: ",x)
-                print("Y: ",y)
                 if self.matrix[x][y] != 0:
                     if self.check_position(x, y):
                         unsatisfied.append((x, y))
-        print("Unsastisfied: ", unsatisfied)
+        #print("Unsastisfied: ", unsatisfied)
         return unsatisfied
 
     def check_position(self, x, y):
@@ -72,7 +72,7 @@ class Matrix:
     # number of different races not being used
     def check_neighborhood(self, neighborhood, pos) -> bool:
         my_race = self.matrix[pos[0]][pos[1]]
-        print("NEIGHBORHOOD: ", neighborhood)
+        #print("NEIGHBORHOOD: ", neighborhood)
         same_race = 0
         num_neighbors = 0
 
@@ -87,7 +87,7 @@ class Matrix:
         except ZeroDivisionError:
             return True
 
-        print("Ratio :", ratio)
+        #print("Ratio :", ratio)
         return ratio < self.threshold
 
     def move_unsatisfied(self, unsat):
@@ -108,41 +108,3 @@ class Matrix:
                 if self.matrix[i][j] == 0:
                     empty.append((i, j))
         return empty
-
-'''      
-        if x == 0 and y == 0:
-            # top left
-            neighbors.append((x +1, y), (x, y+1), (x+1, y+1))
-
-        elif x == 0 and y == self.dim - 1:
-            #top right
-            neighbors.append((x+1,y), (x, y-1), (x+1,y-1))
-
-        elif x == self.dim - 1 and y == 0:
-            # bottom left
-            neighbors.append((x-1,y), (x, y + 1), (x-1, y+1))
-
-        elif x == self.dim - 1 and y == self.dim -1:
-            # bottom right
-            neighbors.append((x-1,y),(x,y-1),(x-1,y-1))
-
-        elif x == 0:
-            # ceiling
-            neighbors.append((x+1,y),(x+1,y-1),(x+1,y+1), (x,y-1), (x,y+1))
-
-        elif y == 0:
-            # left wall
-            neighbors.append((x+1,y), (x-1,y), (x, y+1), (x-1, y+1), (x+1, y+1))
-
-        elif x == self.dim - 1:
-            # floor
-            neighbors.append((x - 1, y), (x - 1, y - 1), (x - 1, y + 1), (x, y - 1), (x, y + 1))
-
-        elif y == self.dim - 1:
-            # right wall
-            neighbors.append((x + 1, y), (x - 1, y), (x, y - 1), (x - 1, y - 1), (x + 1, y - 1))
-
-        else:
-            # regular case
-            neighbors.append((x, y-1), (x, y+1), (x-1, y), (x+1, y), (x-1, y-1),(x-1, y+1), (x+1, y-1), (x+1, y+1))
-        '''
