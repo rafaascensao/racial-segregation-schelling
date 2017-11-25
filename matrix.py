@@ -9,7 +9,7 @@ class Matrix:
         self.entries = dim * dim
         self.n_one = int(self.entries * p_one)
         self.n_two = int(self.entries * p_two)
-        self.n_empy = self.entries -  (self.n_one + self.n_two)
+        self.n_empy = self.entries - (self.n_one + self.n_two)
         self.threshold = threshold
         self.matrix = np.zeros(shape=(dim, dim))
 
@@ -42,9 +42,8 @@ class Matrix:
                     unsatisfied.append((x, y))
         return unsatisfied
 
-
     def check_position(self, x, y):
-        neighbors = []
+        neighbors = list()
         neighbors.append((x, y - 1))
         neighbors.append((x, y + 1))
         neighbors.append((x - 1, y))
@@ -66,7 +65,6 @@ class Matrix:
     def check_neighborhood(self, neighborhood, pos) -> bool:
         my_race = self.matrix[pos[0]][pos[1]]
         same_race = 0
-        diff_race = 0
         num_neighbors = 0
 
         if len(neighborhood) == 0:
@@ -77,13 +75,10 @@ class Matrix:
                 continue
             elif self.matrix[neighbor[0]][neighbor[1]] == my_race:
                 same_race += 1
-                num_neighbors += 1
-            else:
-                diff_race += 1
-                num_neighbors += 1
+            num_neighbors += 1
 
         ratio = same_race / num_neighbors
-
+        print(ratio)
         return ratio > self.threshold
 
     def move_unsatisfied(self, unsat):
