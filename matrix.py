@@ -1,5 +1,5 @@
 import numpy as np
-from random import randint
+from random import randint, choice
 
 
 class Matrix:
@@ -105,8 +105,21 @@ class Matrix:
         return ratio > self.threshold
 
     def move_unsatisfied(self, unsat):
+
+        empty_positions = self.empty_positions()
+
         for u in unsat:
-            x = randint(0, self.dim - 1)
-            y = randint(0, self.dim - 1)
-            if self.matrix[x][y] == 0:
-                self.matrix[x][y] = u[0][1]
+            random_empty = choice(empty_positions)
+            self.matrix[random_empty[0]][random_empty[1]] = self.matrix[u[0]][u[1]]
+            self.matrix[u[0]][u[1]] = 0
+            empty_positions.remove(random_empty)
+            empty_positions.append((u[0], u[1]))
+
+    def empty_positions(self) -> list:
+        empty = list()
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if self.matrix[i][j] == 0:
+                    empty.append((i, j))
+                    continue
+        return empty
