@@ -40,45 +40,48 @@ class Matrix:
             for y in range(self.dim - 1):
                 if self.matrix[x][y] != 0 and self.check_position(x, y):
                     unsatisfied.append((x, y))
+        return unsatisfied
 
 
     def check_position(self, x, y):
+        neighbors = []
+        position = (x, y)
         if x == 0 and y == 0:
             # top left
-            return
+            neighbors.append((x +1, y), (x, y+1), (x+1, y+1))
 
         elif x == 0 and y == self.dim - 1:
             #top right
-            return
+            neighbors.append((x+1,y), (x, y-1), (x+1,y-1))
 
         elif x == self.dim - 1 and y == 0:
             # bottom left
-            return
+            neighbors.append((x-1,y), (x, y + 1), (x-1, y+1))
 
         elif x == self.dim - 1 and y == self.dim -1:
             # bottom right
-            return
+            neighbors.append((x-1,y),(x,y-1),(x-1,y-1))
 
         elif x == 0:
             # ceiling
-            return
+            neighbors.append((x+1,y),(x+1,y-1),(x+1,y+1), (x,y-1), (x,y+1))
 
         elif y == 0:
             # left wall
-            return
+            neighbors.append((x+1,y), (x-1,y), (x, y+1), (x-1, y+1), (x+1, y+1))
 
         elif x == self.dim - 1:
             # floor
-            return
+            neighbors.append((x - 1, y), (x - 1, y - 1), (x - 1, y + 1), (x, y - 1), (x, y + 1))
 
         elif y == self.dim - 1:
             # right wall
-            return
+            neighbors.append((x + 1, y), (x - 1, y), (x, y - 1), (x - 1, y - 1), (x + 1, y - 1))
 
         else:
             # regular case
-            same = 0
-            diff = 0
+            neighbors.append((x, y-1), (x, y+1), (x-1, y), (x+1, y), (x-1, y-1),(x-1, y+1), (x+1, y-1), (x+1, y+1))
+        return self.check_neighborhood(neighbors, position)
 
     # number of different races not being used
     def check_neighborhood(self, neighborhood, pos) -> bool:
@@ -121,5 +124,4 @@ class Matrix:
             for j in range(self.dim):
                 if self.matrix[i][j] == 0:
                     empty.append((i, j))
-                    continue
         return empty
