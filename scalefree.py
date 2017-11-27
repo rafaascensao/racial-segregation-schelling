@@ -2,12 +2,15 @@ import networkx as nx
 from random import choice
 
 class Scale_Free:
-    def __init__(self, size = 100, p_one = 0.3, p_two = 0.3, threshold = 0.0):
+    def __init__(self, size = 100, p_one = 0.4, p_two = 0.4, threshold = 1.0):
 
         self.size = size
         self.n_one = int(self.size * p_one)
         self.n_two = int(self.size * p_two)
+        print("ONE ", self.n_one)
+        print("TWO ", self.n_two)
         self.n_empty = self.size - (self.n_one + self.n_two)
+        print("EMPTY: ", self.n_empty)
         self.threshold = threshold
 
         self.graph = nx.scale_free_graph(size)
@@ -22,7 +25,7 @@ class Scale_Free:
             self.races[node] = 1
             empty_positions.remove(node)
 
-        for i in range(self.n_one):
+        for j in range(self.n_two):
             node = choice(empty_positions)
             self.races[node] = 2
             empty_positions.remove(node)
@@ -55,9 +58,9 @@ class Scale_Free:
         try:
             ratio = same_race / num_neighbors
         except ZeroDivisionError:
-            return True
-
-        return ratio > self.threshold
+            return False
+        print("Ratio: ", ratio)
+        return ratio < self.threshold
 
     def move_unsatisfied(self, unsat):
         empty_positions = self.empty_nodes()
@@ -66,3 +69,7 @@ class Scale_Free:
             random_empty = choice(empty_positions)
             self.races[random_empty] = self.races[u]
             self.races[u] = 0
+
+    def get_race_list(self, race):
+        res = [node for node in self.races if self.races[node] == race]
+        return res

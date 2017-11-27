@@ -5,7 +5,7 @@ from random import randint, choice
 
 
 class Matrix:
-    def __init__(self, dim = 150, p_one = 0.44, p_two = 0.44, threshold = 0.7):
+    def __init__(self, dim = 150, p_one = 0.4, p_two = 0.4, threshold = 0.7):
 
         self.dim = dim
         self.entries = dim * dim
@@ -47,6 +47,11 @@ class Matrix:
         return unsatisfied
 
     def check_position(self, x, y):
+        neighborhood = self.get_neighborhood(x,y)
+        position = (x, y)
+        return self.check_neighborhood(neighborhood, position)
+
+    def get_neighborhood(self, x, y):
         neighbors = list()
         to_remove = list()
         neighbors.append((x, y - 1))
@@ -57,7 +62,6 @@ class Matrix:
         neighbors.append((x - 1, y + 1))
         neighbors.append((x + 1, y - 1))
         neighbors.append((x + 1, y + 1))
-        position = (x, y)
         for t in neighbors:
             if t[0] < 0 or t[0] > self.dim-1:
                 to_remove.append(t)
@@ -67,12 +71,17 @@ class Matrix:
         for r in to_remove:
             neighbors.remove(r)
 
-        return self.check_neighborhood(neighbors, position)
+        #return self.check_neighborhood(neighbors, position)
+        return neighbors
 
     # number of different races not being used
     def check_neighborhood(self, neighborhood, pos) -> bool:
+        ratio = self.get_position_ratio(neighborhood, pos)
+        return ratio < self.threshold
+
+    def get_position_ratio(self, neighborhood, pos):
         my_race = self.matrix[pos[0]][pos[1]]
-        #print("NEIGHBORHOOD: ", neighborhood)
+        # print("NEIGHBORHOOD: ", neighborhood)
         same_race = 0
         num_neighbors = 0
 
@@ -82,13 +91,12 @@ class Matrix:
             elif self.matrix[neighbor[0]][neighbor[1]] == my_race:
                 same_race += 1
             num_neighbors += 1
+
         try:
             ratio = same_race / num_neighbors
         except ZeroDivisionError:
-            return True
-
-        #print("Ratio :", ratio)
-        return ratio < self.threshold
+            ratio = 1
+        return ratio
 
     def move_unsatisfied(self, unsat):
 
@@ -108,3 +116,15 @@ class Matrix:
                 if self.matrix[i][j] == 0:
                     empty.append((i, j))
         return empty
+
+    def calculate_segregation(self):
+        similarity = []
+        for x in range(self.dim):
+            for y in range(self.dim):
+                if self.matrix[x][y] != 0:
+                    neighborhood = self.get_neighborhood(x ,y)
+                    position = (x, y)
+                    similarity.append(self.get_position_ratio(neighborhood, position))
+        return sum(similarity)/len(similarity)
+
+
