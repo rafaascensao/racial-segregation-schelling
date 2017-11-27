@@ -69,7 +69,7 @@ class Scale_Free:
             random_empty = choice(empty_positions)
             self.races[random_empty] = self.races[u]
             self.races[u] = 0
-            empty_positions.remove(random_empty)
+            empty_positions = self.empty_nodes()
 
     def get_race_list(self, race):
         res = [node for node in self.races if self.races[node] == race]
