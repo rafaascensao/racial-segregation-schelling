@@ -37,14 +37,8 @@ def run_matrix():
 
 def run_graph():
     g = Scale_Free()
-    race_one = g.get_race_list(1)
-    print("RACE ONE: ", len(race_one))
-    race_two = g.get_race_list(2)
-    print("RACE TWO: ", len(race_two))
-    empty = g.empty_nodes()
-    print("EMPTY: ", len(empty))
     unsatisfied = g.assert_unsatisfied()
-    print("unsatisfied:", unsatisfied)
+    #print("unsatisfied:", unsatisfied)
     steps = 0
     unsat_evotulion = []
 

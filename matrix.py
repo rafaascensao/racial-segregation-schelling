@@ -5,7 +5,7 @@ from random import randint, choice
 
 
 class Matrix:
-    def __init__(self, dim = 150, p_one = 0.4, p_two = 0.4, threshold = 0.7):
+    def __init__(self, dim = 50, p_one = 0.35, p_two = 0.35, threshold = 0.6):
 
         self.dim = dim
         self.entries = dim * dim
