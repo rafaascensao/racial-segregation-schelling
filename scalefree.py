@@ -2,8 +2,7 @@ import networkx as nx
 from random import choice
 
 class Scale_Free:
-    def __init__(self, size = 100, p_one = 0.4, p_two = 0.4, threshold = 1.0):
-
+    def __init__(self, size = 200, p_one = 0.45, p_two = 0.45, threshold = 0.5):
         self.size = size
         self.n_one = int(self.size * p_one)
         self.n_two = int(self.size * p_two)
@@ -13,7 +12,9 @@ class Scale_Free:
         print("EMPTY: ", self.n_empty)
         self.threshold = threshold
 
-        self.graph = nx.scale_free_graph(size)
+        self.graph = nx.barabasi_albert_graph(size, 3)
+        #self.graph = nx.scale_free_graph(size)
+        #self.graph = self.graph.to_undirected()
         self.races = {node: 0 for node in self.graph.nodes()}
         self.populate()
 
@@ -59,7 +60,7 @@ class Scale_Free:
             ratio = same_race / num_neighbors
         except ZeroDivisionError:
             return False
-        print("Ratio: ", ratio)
+        #print("Ratio: ", ratio)
         return ratio < self.threshold
 
     def move_unsatisfied(self, unsat):
