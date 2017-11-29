@@ -27,13 +27,10 @@ def run_matrix():
     #plt.show()
     #steps = list(range(len(segregation)))
 
-    step_list = [i for i in range(steps)]
-
     plt.imshow(m.matrix, interpolation='nearest')
     plt.show()
 
-    plt.scatter(step_list, unsat_evolution)
-    plt.show()
+    plot_steps_unsat(steps, unsat_evolution)
 
     plt.plot(segregation)
     plt.show()
@@ -49,14 +46,19 @@ def run_graph():
     unsatisfied = g.assert_unsatisfied()
     print("unsatisfied:", unsatisfied)
     steps = 0
+    unsat_evotulion = []
+
     while len(unsatisfied) > 0:
         g.move_unsatisfied(unsatisfied)
         unsatisfied = g.assert_unsatisfied()
         print("Unsatisfied percentage = ", (len(unsatisfied) / g.size) * 100)
         steps += 1
-        print("unsatisfied:", unsatisfied)
+        unsat_evotulion.append((len(unsatisfied) / g.size) * 100)
+
     print("all satisfied.\n steps: ", steps)
     plot_graph(g)
+    plot_steps_unsat(steps, unsat_evotulion)
+
 
 def plot_graph(g):
     race_one = g.get_race_list(1)
@@ -73,6 +75,13 @@ def plot_graph(g):
     nx.draw_networkx_edges(g.graph, pos, width=1.0, alpha=0.5)
     plt.show()
 
+def plot_steps_unsat(steps, unsat_evolution):
+    step_list = [i for i in range(steps)]
+
+    plt.scatter(step_list, unsat_evolution)
+    plt.show()
+
 
 if __name__ == '__main__':
+    run_matrix()
     run_graph()

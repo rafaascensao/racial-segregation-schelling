@@ -2,7 +2,7 @@ import networkx as nx
 from random import choice
 
 class Scale_Free:
-    def __init__(self, size = 100, p_one = 0.4, p_two = 0.4, threshold = 1.0):
+    def __init__(self, size = 5000, p_one = 0.4, p_two = 0.4, threshold = 0.7):
 
         self.size = size
         self.n_one = int(self.size * p_one)
@@ -59,7 +59,6 @@ class Scale_Free:
             ratio = same_race / num_neighbors
         except ZeroDivisionError:
             return False
-        print("Ratio: ", ratio)
         return ratio < self.threshold
 
     def move_unsatisfied(self, unsat):
