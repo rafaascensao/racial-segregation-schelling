@@ -31,7 +31,8 @@ def run_matrix():
     plt.imshow(m.matrix, interpolation='nearest')
     plt.show()
 
-    plot_steps_unsat(steps, unsat_evolution)
+    plt.plot(unsat_evolution)
+    plt.show()
 
     plt.plot(segregation)
     plt.show()
@@ -41,18 +42,24 @@ def run_graph():
     unsatisfied = g.assert_unsatisfied()
     #print("unsatisfied:", unsatisfied)
     steps = 0
-    unsat_evotulion = []
-
+    unsat_evolution = list()
+    segregation = list()
+    segregation.append((g.calculate_segregation() - 0.5)*2)
     while len(unsatisfied) > 0:
         g.move_unsatisfied(unsatisfied)
         unsatisfied = g.assert_unsatisfied()
         print("Unsatisfied percentage = ", (len(unsatisfied) / g.size) * 100)
         steps += 1
-        unsat_evotulion.append((len(unsatisfied) / g.size) * 100)
+        unsat_evolution.append((len(unsatisfied) / g.size) * 100)
+        segregation.append((g.calculate_segregation() - 0.5) * 2)
 
     print("all satisfied.\n steps: ", steps)
     plot_graph(g)
-    plot_steps_unsat(steps, unsat_evotulion)
+    plt.plot(unsat_evolution)
+    plt.show()
+
+    plt.plot(segregation)
+    plt.show()
 
 
 def plot_graph(g):
@@ -107,3 +114,4 @@ if __name__ == '__main__':
         run_graph()
     else:
         print('ERROR: Type must be either matrix or scalefree')
+

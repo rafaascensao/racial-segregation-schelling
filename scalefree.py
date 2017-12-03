@@ -75,3 +75,22 @@ class Scale_Free:
     def get_race_list(self, race):
         res = [node for node in self.races if self.races[node] == race]
         return res
+
+    def get_node_ratio(self, node):
+        neighborhood = self.graph.neighbors(node)
+        same_race = 0
+        num_neighbors = 0
+        for n in neighborhood:
+            if self.races[n] == 0:
+                continue
+            if self.races[n] == self.races[node]:
+                same_race += 1
+            num_neighbors += 1
+        return same_race / num_neighbors if num_neighbors != 0 else 1
+
+    def calculate_segregation(self):
+        similarity = []
+        for n in self.graph.nodes():
+            if self.races[n] != 0:
+                similarity.append(self.get_node_ratio(n))
+        return sum(similarity)/len(similarity) if len(similarity)!= 0 else 0

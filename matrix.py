@@ -125,6 +125,6 @@ class Matrix:
                     neighborhood = self.get_neighborhood(x ,y)
                     position = (x, y)
                     similarity.append(self.get_position_ratio(neighborhood, position))
-        return sum(similarity)/len(similarity)
+        return sum(similarity)/len(similarity) if len(similarity) != 0 else 0
 
 
