@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import argparse
 
-def run_matrix():
-    m = Matrix()
+def run_matrix(threshold, ones, twos, dimension):
+    m = Matrix(dimension, ones, twos, threshold)
     segregation = list()
     print(m.matrix)
     unsatisfied = m.assert_unsatisfied()
@@ -37,8 +37,8 @@ def run_matrix():
     plt.plot(segregation)
     plt.show()
 
-def run_graph():
-    g = Scale_Free()
+def run_graph(threshold, ones, twos, dimension):
+    g = Scale_Free(dimension*dimension, ones, twos, threshold)
     unsatisfied = g.assert_unsatisfied()
     #print("unsatisfied:", unsatisfied)
     steps = 0
@@ -84,34 +84,40 @@ def plot_steps_unsat(steps, unsat_evolution):
     plt.show()
 
 def verify_arguments(threshold, ones, twos):
+    value = True
+    print(ones)
     if threshold < 0 or threshold > 1:
         print('ERROR: Threshold must be between 0 and 1')
-        return False
-    elif ones < 0 or ones > 1:
+        value = False
+
+    if ones < 0 or ones > 1:
         print('ERROR: Race one must be between 0 and 1')
-        return False
-    elif twos < 0 or twos > 1:
+        value = False
+
+    if twos < 0 or twos > 1:
         print('ERROR: Race two must be between 0 and 1')
-        return False
-    elif ones+twos >= 1:
+        value = False
+
+    if ones+twos >= 1:
         print('ERROR: Race one + two must be under 1')
-    else:
-        return True
+        value = False
+
+    return value
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Computer simulation of the Schelling model')
-    parser.add_argument('-tp','--type', help='Type of the representation of the model (either matrix or scalefree)', default='matrix')
+    parser.add_argument("-tp","--type", help='Type of the representation of the model (either matrix or scalefree)', default='matrix')
     parser.add_argument('-thold', '--threshold', type=float, help='Threshold desired', default=0.3)
-    parser.add_argument('-o''-ones', type=float, help='Percentage of agents belonging to race one', default=0.4)
-    parser.add_argument('-t''-twos', type=float, help='Percentage of agents belonging to race two', default=0.4)
+    parser.add_argument('-o','--ones', type=float, help='Percentage of agents belonging to race one', default=0.4)
+    parser.add_argument('-t','--twos', type=float, help='Percentage of agents belonging to race two', default=0.4)
     parser.add_argument('-d', '--dimension', type=int, help='Percentage of agents belonging to race two', default=50)
     args = parser.parse_args()
     if not verify_arguments(args.threshold, args.ones, args.twos):
         print('Arguments given are not approriate')
     elif args.type == 'matrix':
-        run_matrix()
+        run_matrix(args.threshold, args.ones, args.twos, args.dimension)
     elif args.type == 'scalefree':
-        run_graph()
+        run_graph(args.threshold, args.ones, args.twos, args.dimension)
     else:
         print('ERROR: Type must be either matrix or scalefree')
 
