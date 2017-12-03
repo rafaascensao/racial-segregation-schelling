@@ -2,8 +2,11 @@
 Computer Simulation for the schelling model
 
 Complex Network course
+
 Group 8
+
 Joao Rodrigues 78672
+
 Pedro Ascensao 78961
 
 ## Dependencies
@@ -44,5 +47,7 @@ optional arguments:
 ```
 
 The defaults are : type=matrix, threshold=0.3, ones=0.4, twos=0.4, dimension=50. 
+
 For either the matrix or the graph, the number of entries or nodes is given by dimension * dimension.
+
 The percentages and the threshold must be between 0 and 1. 
