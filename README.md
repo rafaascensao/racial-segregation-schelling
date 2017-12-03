@@ -51,3 +51,5 @@ The defaults are : type=matrix, threshold=0.3, ones=0.4, twos=0.4, dimension=50.
 For either the matrix or the graph, the number of entries or nodes is given by dimension * dimension.
 
 The percentages and the threshold must be between 0 and 1. 
+
+Report for the course is the file report.pdf
