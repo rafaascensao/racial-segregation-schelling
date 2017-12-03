@@ -2,6 +2,7 @@ from matrix import  Matrix
 from scalefree import Scale_Free
 import matplotlib.pyplot as plt
 import networkx as nx
+import argparse
 
 def run_matrix():
     m = Matrix()
@@ -75,7 +76,34 @@ def plot_steps_unsat(steps, unsat_evolution):
     plt.scatter(step_list, unsat_evolution)
     plt.show()
 
+def verify_arguments(threshold, ones, twos):
+    if threshold < 0 or threshold > 1:
+        print('ERROR: Threshold must be between 0 and 1')
+        return False
+    elif ones < 0 or ones > 1:
+        print('ERROR: Race one must be between 0 and 1')
+        return False
+    elif twos < 0 or twos > 1:
+        print('ERROR: Race two must be between 0 and 1')
+        return False
+    elif ones+twos >= 1:
+        print('ERROR: Race one + two must be under 1')
+    else:
+        return True
 
 if __name__ == '__main__':
-    run_matrix()
-    run_graph()
+    parser = argparse.ArgumentParser(description='Computer simulation of the Schelling model')
+    parser.add_argument('-tp','--type', help='Type of the representation of the model (either matrix or scalefree)', default='matrix')
+    parser.add_argument('-thold', '--threshold', type=float, help='Threshold desired', default=0.3)
+    parser.add_argument('-o''-ones', type=float, help='Percentage of agents belonging to race one', default=0.4)
+    parser.add_argument('-t''-twos', type=float, help='Percentage of agents belonging to race two', default=0.4)
+    parser.add_argument('-d', '--dimension', type=int, help='Percentage of agents belonging to race two', default=50)
+    args = parser.parse_args()
+    if not verify_arguments(args.threshold, args.ones, args.twos):
+        print('Arguments given are not approriate')
+    elif args.type == 'matrix':
+        run_matrix()
+    elif args.type == 'scalefree':
+        run_graph()
+    else:
+        print('ERROR: Type must be either matrix or scalefree')
