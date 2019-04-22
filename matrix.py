@@ -1,9 +1,6 @@
 import numpy as np
 from random import randint, choice
 
-
-
-
 class Matrix:
     def __init__(self, dim = 50, p_one = 0.35, p_two = 0.35, threshold = 0.6):
 
