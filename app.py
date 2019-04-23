@@ -9,7 +9,9 @@ import plotly.graph_objs as go
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+matrix = None
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.config['suppress_callback_exceptions']=True
 
 app.layout = html.Div(children=[
     html.H1(children='Schelling Racial Segregation'),
@@ -18,8 +20,17 @@ app.layout = html.Div(children=[
         Schelling Racial Segregation - Simulation done by using Dash by Plotly.
     '''),
 
-    dcc.Graph(id='matrix'),
-
+    html.Div(children=[
+        html.H2("Initial Matrix:"),
+        dcc.Graph(id='matrix'),
+    ]),
+    html.Div(children=[
+        html.H2("Updated Matrix:"),
+        dcc.Graph(id='matrix-update'),
+        html.Div(id='len-unsat'),
+    ]),
+    html.Button('Run Simulation', id='button'),
+    html.Div(id='interval'),
     html.Div(children=[
         html.H2("Parameters"),
         html.Div(children=[
@@ -73,11 +84,11 @@ app.layout = html.Div(children=[
      Input('empty', 'value'),
      Input('ratio', 'value'),
      Input('threshold', 'value')])
-
 def update_matrix(dimension, empty, ratio, threshold):
     occupied_space = 1 - empty
     p_one = ratio * occupied_space
     p_two = (1 - ratio) * occupied_space
+    global matrix # Using global keyword MY HEART
     matrix = Matrix(dimension, p_one, p_two, threshold)
     return {
         'data': [go.Heatmap(
@@ -105,6 +116,52 @@ def update_matrix(dimension, empty, ratio, threshold):
             )
         )
     }
+
+@app.callback(
+    Output('interval', 'children'),
+    [Input('button', 'n_clicks')])
+def run_simulation(n_clicks):
+    if n_clicks != None:
+        return dcc.Interval(
+            id='interval-component',
+            interval=1*1000, # in milliseconds
+            n_intervals=0
+        )
+
+@app.callback([Output('matrix-update', 'figure'),
+               Output('len-unsat', 'children')],
+              [Input('interval-component', 'n_intervals')])
+def update_graph(n_intervals):
+    global matrix
+    unsat = matrix.assert_unsatisfied()
+    matrix.move_unsatisfied(unsat)
+    return {
+        'data': [go.Heatmap(
+            z=matrix.matrix, 
+            showscale=False,
+            colorscale=[[0, 'rgb(220,220,220)'], [0.5, 'rgb(255,0,0)'], [1, 'rgb(0,0,255)']]
+        )],
+
+        'layout': go.Layout(
+            xaxis=dict(
+                autorange=True,
+                showgrid=False,
+                zeroline=False,
+                showline=False,
+                ticks='',
+                showticklabels=False
+            ),
+            yaxis=dict(
+                autorange=True,
+                showgrid=False,
+                zeroline=False,
+                showline=False,
+                ticks='',
+                showticklabels=False
+            )
+        )
+    }, len(unsat)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
